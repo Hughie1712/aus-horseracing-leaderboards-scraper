@@ -2,24 +2,29 @@ name: Scrape AUS Jockeys & Trainers Leaderboards
 
 on:
   schedule:
-    # Runs every day at 6:00 AM AEST
-    # 20:00 UTC = 6:00 AM AEST the next day
-    - cron: '0 20 * * *'
-  workflow_dispatch:   # Allows manual trigger from GitHub UI
+    - cron: '0 20 * * *'   # Runs daily at 6:00 AM AEST
+  workflow_dispatch:
 
 jobs:
-  scrape-leaderboards:
+  scrape:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'           # Updated to Node 24 (recommended)
           cache: 'npm'
+
+      - name: Install system dependencies for Puppeteer
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libnss3 libatk-bridge2.0-0 libdrm2 libxkbcommon0 \
+            libgbm1 libasound2
 
       - name: Install npm dependencies
         run: npm install
@@ -30,7 +35,7 @@ jobs:
       - name: Create Firebase service account key
         run: echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' > serviceAccountKey.json
 
-      - name: Run combined scraper (Jockeys + Trainers)
+      - name: Run scraper
         run: node scrape-AUSall-premierships.js
 
       - name: Clean up service account key
