@@ -2,7 +2,7 @@ name: Scrape AUS Jockeys & Trainers Leaderboards
 
 on:
   schedule:
-    - cron: '0 20 * * *'   # Runs daily at 6:00 AM AEST
+    - cron: '0 20 * * *'     # Runs daily at 6:00 AM AEST
   workflow_dispatch:
 
 jobs:
@@ -10,23 +10,27 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '24'           # Updated to Node 24 (recommended)
+          node-version: '24'           # ← Must be 24
           cache: 'npm'
 
-      - name: Install system dependencies for Puppeteer
+      - name: Install system dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            libnss3 libatk-bridge2.0-0 libdrm2 libxkbcommon0 \
-            libgbm1 libasound2
+            libnss3 \
+            libatk-bridge2.0-0 \
+            libdrm2 \
+            libxkbcommon0 \
+            libgbm1 \
+            libasound2
 
-      - name: Install npm dependencies
+      - name: Install dependencies
         run: npm install
 
       - name: Install Chrome for Puppeteer
