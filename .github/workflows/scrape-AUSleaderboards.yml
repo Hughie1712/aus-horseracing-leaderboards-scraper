@@ -2,7 +2,7 @@ name: Scrape AUS Jockeys & Trainers Leaderboards
 
 on:
   schedule:
-    - cron: '0 20 * * *'     # Runs daily at 6:00 AM AEST
+    - cron: '0 20 * * *'   # Runs every day at 6:00 AM AEST
   workflow_dispatch:
 
 jobs:
@@ -16,7 +16,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '24'           # ← Must be 24
+          node-version: '24'
           cache: 'npm'
 
       - name: Install system dependencies
@@ -30,7 +30,7 @@ jobs:
             libgbm1 \
             libasound2
 
-      - name: Install dependencies
+      - name: Install npm dependencies
         run: npm install
 
       - name: Install Chrome for Puppeteer
